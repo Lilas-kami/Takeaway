@@ -50,4 +50,13 @@ public class CategoryServiceImpl implements CategoryService {
 
         return new PageResult(total,recods);
     }
+
+    /**
+     * 根据id删除分类
+     * @param id
+     */
+    @Override
+    public void delete(Long id) {
+        categoryMapper.delete(id);
+    }
 }
