@@ -78,4 +78,15 @@ public class CategoryServiceImpl implements CategoryService {
                 .build();
         categoryMapper.update(category);
     }
+
+    /**
+     * 根据类型查询分类
+     * @param type
+     * @return
+     */
+    @Override
+    public List<Category> getCategoryByType(Integer type) {
+        List<Category> categories = categoryMapper.getCategoryByType(type);
+        return categories;
+    }
 }
