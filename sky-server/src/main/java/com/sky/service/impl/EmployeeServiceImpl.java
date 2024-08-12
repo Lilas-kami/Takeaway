@@ -9,6 +9,7 @@ import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
+import com.sky.dto.PasswordEditDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
@@ -16,6 +17,7 @@ import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
 import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -147,6 +150,31 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setUpdateTime(LocalDateTime.now());
         employee.setUpdateUser(BaseContext.getCurrentId());
 
+        employeeMapper.update(employee);
+    }
+
+    /**
+     * 修改密码
+     * @param passwordEditDTO
+     */
+    @Override
+    public void updatePassword(PasswordEditDTO passwordEditDTO) {
+        //先根据id查询
+        //前端没有传id，用ThreadLocal查询员工
+        Employee employee = employeeMapper.getById(BaseContext.getCurrentId());
+        log.info("数据库密码{}",employee.getPassword());
+        //对新密码和旧密码就行md5算法加密
+        String oldPassword = passwordEditDTO.getOldPassword();
+        String newPassword = passwordEditDTO.getNewPassword();
+
+        newPassword = DigestUtils.md5DigestAsHex(newPassword.getBytes());
+        oldPassword = DigestUtils.md5DigestAsHex(oldPassword.getBytes());
+
+        //判断旧密码和数据库密码是否一样
+        if (!(oldPassword.equals(employee.getPassword()))) {
+            throw new AccountLockedException(MessageConstant.PASSWORD_EDIT_FAILED);
+        }
+        employee.setPassword(newPassword);
         employeeMapper.update(employee);
     }
 }
