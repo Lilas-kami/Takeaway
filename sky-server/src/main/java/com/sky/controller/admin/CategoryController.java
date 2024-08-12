@@ -57,4 +57,18 @@ public class CategoryController {
         categoryService.delete(id);
         return Result.success();
     }
+
+    /**
+     * 启用禁用分类
+     * @param status
+     * @param id
+     * @return
+     */
+    @ApiOperation("启用禁用分类")
+    @PostMapping("status/{status}")
+    public Result startOrStop(@PathVariable Integer status,Long id){
+        log.info("修改的id为{},status:{}",id,status);
+        categoryService.startOrStop(status,id);
+        return Result.success();
+    }
 }

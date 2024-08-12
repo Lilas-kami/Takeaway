@@ -21,14 +21,16 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryMapper categoryMapper;
+
     /**
      * 新增套餐
+     *
      * @param categoryDTO
      */
     @Override
     public void save(CategoryDTO categoryDTO) {
         Category category = new Category();
-        BeanUtils.copyProperties(categoryDTO,category);
+        BeanUtils.copyProperties(categoryDTO, category);
         category.setStatus(StatusConstant.DISABLE);
         category.setCreateTime(LocalDateTime.now());
         category.setUpdateTime(LocalDateTime.now());
@@ -36,8 +38,10 @@ public class CategoryServiceImpl implements CategoryService {
         category.setUpdateUser(BaseContext.getCurrentId());
         categoryMapper.insert(category);
     }
+
     /**
      * 套餐分页查询
+     *
      * @param categoryPageQueryDTO
      * @return
      */
@@ -48,15 +52,30 @@ public class CategoryServiceImpl implements CategoryService {
         Long total = page.getTotal();
         List<Category> recods = page.getResult();
 
-        return new PageResult(total,recods);
+        return new PageResult(total, recods);
     }
 
     /**
      * 根据id删除分类
+     *
      * @param id
      */
     @Override
     public void delete(Long id) {
         categoryMapper.delete(id);
+    }
+
+    /**
+     * 启用禁用分类
+     *
+     * @param id
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        Category category = Category.builder()
+                .status(status)
+                .id(id)
+                .build();
+        categoryMapper.update(category);
     }
 }
