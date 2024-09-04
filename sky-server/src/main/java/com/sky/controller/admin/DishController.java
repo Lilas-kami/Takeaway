@@ -28,6 +28,7 @@ public class DishController {
      * @return
      */
     @PostMapping
+    @ApiOperation("新增菜品接口")
     public Result save(@RequestBody DishDTO dishDTO){
          dishService.saveWithFlavor(dishDTO);
          return Result.success();
