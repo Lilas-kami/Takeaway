@@ -20,7 +20,9 @@
                  <if test="type != null">
                      type = #{type}
                  </if>
+                 and status = 1
              </where>
+
     </select>
     <update id="update">
         update category
