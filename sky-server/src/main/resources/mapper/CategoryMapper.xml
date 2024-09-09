@@ -14,6 +14,14 @@
         </where>
         order by sort asc,update_time desc
     </select>
+    <select id="getCategoryByType" resultType="com.sky.entity.Category" parameterType="java.lang.Integer">
+        select * from category
+             <where>
+                 <if test="type != null">
+                     type = #{type}
+                 </if>
+             </where>
+    </select>
     <update id="update">
         update category
         <set>
